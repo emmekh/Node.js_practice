@@ -17,12 +17,14 @@ setTimeout(() => {
 // Intervals
 let intervalCount = 0;
 const interval = setInterval(() => {
-    info(`Interval ${intervalCount += 1}`);
+    info(`Interval ${(intervalCount += 1)}`);
     if (intervalCount === 3) clearInterval(interval);
 }, 50);
 
 // Close events
-fs.writeFile('./01-event_loop_events/test.txt', 'Hello Node.js', () => info('File written:'));
+fs.writeFile('./01-event_loop_events/test.txt', 'Hello Node.js', () =>
+    info('File written:')
+);
 
 // Promises
 Promise.resolve().then(() => info('Promise 1:'));
@@ -38,6 +40,6 @@ dns.lookup('localhost', () => {
     info('DNS 1 localhost:');
     Promise.resolve().then(() => info('Promise 2:'));
     process.nextTick(() => info('Next tick 3:'));
-})
+});
 
 console.log('Program end');
