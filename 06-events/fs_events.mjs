@@ -1,23 +1,24 @@
-import { EventListener } from 'events';
+import EventEmitter from 'events';
 import fs from 'fs';
-const fileEmitter = new EventListener();
+const fileEmitter = new EventEmitter();
+const filePath = './first.txt';
 
 fileEmitter.on('writeComplete', () => {
-    console.log('File first.txt was written');
-    fs.appendFile('./first.txt', '\nNew line', () => {
+    console.log(`File ${filePath} was written`);
+    fs.appendFile(filePath, '\nNew line', () => {
         fileEmitter.emit('appendComplete');
     });
 });
 
 fileEmitter.on('appendComplete', () => {
-    console.log('Appended text to the first.txt file');
-});
-
-fs.writeFile('./first.txt', 'First file text', () => {
-    fileEmitter.emit('writeComplete');
-    fs.rename('./first.txt', 'updated_first.txt', () => {
+    console.log(`Appended text to the ${filePath} file`);
+    fs.rename(filePath, 'updated_first.txt', () => {
         fileEmitter.emit('renameComplete');
     });
+});
+
+fs.writeFile(filePath, 'First file text', () => {
+    fileEmitter.emit('writeComplete');
 });
 
 fileEmitter.on('renameComplete', () => {
